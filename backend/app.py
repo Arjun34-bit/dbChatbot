@@ -4,7 +4,7 @@ from flask_cors import CORS
 
 
 app=Flask(__name__)
-CORS(app)
+CORS(app,resources={r"/api/*": {"origins": "https://db-chatbot.vercel.app"}})
 
 #Default Route
 @app.route("/",methods=["GET"])
