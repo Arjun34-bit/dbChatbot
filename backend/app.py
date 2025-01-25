@@ -6,10 +6,19 @@ from flask_cors import CORS
 app=Flask(__name__)
 CORS(app,origins= ["https://db-chatbot.vercel.app"])
 
+@app.before_request
+def before_request():
+    if request.method == 'OPTIONS':  # Handle preflight requests
+        response = app.make_default_options_response()
+        response.headers['Access-Control-Allow-Origin'] = '*'  # Allow all origins or specify your frontend URL
+        response.headers['Access-Control-Allow-Methods'] = 'POST, GET, OPTIONS'  # Allowed methods
+        response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'  # Allowed headers
+        return response
+
 #Default Route
 @app.route("/",methods=["GET"])
 def welcome():
-    return "API Running Successfully"
+    return "API Running Successfully",200
 
 
 try:
