@@ -12,12 +12,13 @@ class Database:
         # Create a connection pool
         self.pool = mysql.connector.pooling.MySQLConnectionPool(
             pool_name="my_connection_pool",
-            pool_size=10, 
+            pool_size=1, 
             pool_reset_session=True,
             host=os.getenv('MYSQL_HOST'),
             user=os.getenv('MYSQL_USER'),
-            password=os.getenv('MYSQL_PASSWORD'),
-            database=os.getenv('MYSQL_DB')
+            password="mtgnLiiYtQbQKXgphtSn",
+            database=os.getenv('MYSQL_DB'),
+            port=os.getenv('MYSQL_PORT')
         )
         print("Connection pool created successfully")
 
