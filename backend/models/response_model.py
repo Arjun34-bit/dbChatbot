@@ -4,7 +4,7 @@ import openai
 from typing_extensions import TypedDict
 from langchain.chains import LLMChain
 # from langchain_community.llms import OpenAI
-from langchain_openai import OpenAI
+# from langchain_openai import OpenAI
 from langchain.prompts import PromptTemplate
 from langgraph.graph import StateGraph, START, END
 from configs.config import get_connection
@@ -59,14 +59,16 @@ def generate_sql(state:AgentState):
         if not api_key:
             raise ValueError("OpenAI API key is not set in environment variables.")
         
-        client=OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+        openai.api_key = api_key
+        
+        # client=OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
         messages = [
             {"role": "system", "content": "You are a helpful assistant that converts natural language queries into SQL. The database schema is also provided. Return only the SQL statement, skip the explanations."},
             {"role": "user", "content": f"User Query: {state['user_query']}\nDATABASE SCHEMA: {state['database_schema']}"}
         ]
 
-        response = client.chat.Completion.create(
+        response =  openai.ChatCompletion.create(
             model="gpt-4o-mini", 
             messages=messages, 
             max_tokens=150,
@@ -121,8 +123,9 @@ def human_readable(state:AgentState):
         if not api_key:
             raise ValueError("OpenAI API key is not set in environment variables.")
         
-        client=OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+        # client=OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
+        openai.api_key = api_key
 
         # Set up LangChain with OpenAI for SQL query generation
         prompt = (
@@ -131,7 +134,7 @@ def human_readable(state:AgentState):
             f"You are a helpful assistant that converts sql table data into natural human-readable format according to the question. And return only text, skip the explanations"
         )
 
-        response = client.chat.Completion.create(
+        response = openai.ChatCompletion.create(
             model="gpt-4o-mini",  
             messages=[{
                 "role": "user",
