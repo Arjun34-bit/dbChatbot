@@ -128,17 +128,18 @@ def human_readable(state:AgentState):
         openai.api_key = api_key
 
         # Set up LangChain with OpenAI for SQL query generation
-        message = (
+        messages = (
             f"User Query: {state['user_query']}\n"
             f"SQL Query Result: {state['execute_sql_query']}\n"
             f"You are a helpful assistant that converts sql table data into natural human-readable format according to the question. And return only text, skip the explanations"
         )
 
+
         response = openai.completions.create(
             model="gpt-4o-mini",  
             prompt=[{
                 "role": "user",
-                "content": message
+                "content": messages
             }],
             max_tokens=150,  
             temperature=0.7, 
