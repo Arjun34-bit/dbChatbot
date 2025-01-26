@@ -122,7 +122,7 @@ def human_readable(state:AgentState):
     print("Gnerating Human Readable format")
 
     try:
-        print(f"Getting Output from SQL genrated data {state['execute_sql_query']}")
+        print(f"Getting Output from SQL generated data {state['execute_sql_query']}")
         # Retrieve the API key securely
         api_key = os.getenv("OPENAI_API_KEY")
         if not api_key:
@@ -133,16 +133,15 @@ def human_readable(state:AgentState):
         # openai.api_key = api_key
 
         # Set up LangChain with OpenAI for SQL query generation
-        message = (
-            f"User Query: {state['user_query']}\n"
-            f"SQL Query Result: {state['execute_sql_query']}\n"
-            f"You are a helpful assistant that converts sql table data into natural human-readable format according to the question. And return only text, skip the explanations"
-        )
+        messages = [
+            {"role": "system", "content": "You are a helpful assistant that converts SQL table data into natural human-readable format according to the question. Return only text, skip the explanations."},
+            {"role": "user", "content": f"User Query: {state['user_query']}\nSQL Query Result: {state['execute_sql_query']}"}
+        ]
 
 
         response =  client.chat.completions.create(
             model='gpt-4o-mini', 
-            messages=message
+            messages=messages
         )
         
         # Extract the reply from the response
