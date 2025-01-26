@@ -85,7 +85,7 @@ def generate_sql(state:AgentState):
         raise
 
 def execute_sql(state:AgentState):
-    print(f"Getting SQL Query {state["sql_query"]}")
+    print(f"Getting SQL Query {state['sql_query']}")
 
     try:
         query=state["sql_query"]
@@ -108,7 +108,7 @@ def human_readable(state:AgentState):
     print("Gnerating Human Readable format")
 
     try:
-        print(f"Getting Output from SQL genrated data {state["execute_sql_query"]}")
+        print(f"Getting Output from SQL genrated data {state['execute_sql_query']}")
         # Retrieve the API key securely
         api_key = os.getenv("OPENAI_API_KEY")
         if not api_key:
