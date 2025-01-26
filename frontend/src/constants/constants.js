@@ -1,1 +1,1 @@
-export const URL = "https://dbchatbot-api.onrender.com/api";
+export const URL = "http://127.0.0.1:5000/api";

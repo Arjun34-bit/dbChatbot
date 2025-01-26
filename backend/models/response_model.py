@@ -27,8 +27,6 @@ def get_schema(state: AgentState):
         # Query to get all tables in the database
         cursor.execute("SHOW TABLES")
         tables = cursor.fetchall()
-
-        print(tables)
         schema = {}
 
         for table in tables:

@@ -19,16 +19,6 @@ def generate_token(user_id):
 
 
 def decode_token(token):
-    """
-    Function to decode a JWT token and get the user data from the token.
-
-    Parameters:
-    - token: The JWT token to decode.
-
-    Returns:
-    - payload: The decoded payload containing user data (user_id, etc.).
-    - error: Returns an error message if the token is invalid or expired.
-    """
     try:
         # Get the secret key from the environment variables
         secret_key = os.getenv("SECRET_KEY")
