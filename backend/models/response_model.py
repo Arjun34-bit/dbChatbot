@@ -5,12 +5,12 @@ from langchain.chains import LLMChain
 from langchain_community.llms import OpenAI
 from langchain.prompts import PromptTemplate
 from langgraph.graph import StateGraph, START, END
-from configs.config import Database
+from configs.config import get_connection
+import mysql.connector
 # from typing import Annotated 
 # from langgraph.graph.message import add_message
 
 
-db = Database()
 
 class State(TypedDict):
     current_user: str
@@ -65,7 +65,7 @@ def execute_sql(state:AgentState):
     try:
         query=state["sql_query"]
         print("Executing SQL Query")
-        conn = db.get_connection()
+        conn = get_connection()
         cursor = conn.cursor()
 
         # Execute the SQL query

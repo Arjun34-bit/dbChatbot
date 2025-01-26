@@ -1,16 +1,15 @@
 from flask import request,jsonify
-from configs.config import Database
+from configs.config import get_connection
 
 from configs.helpers import generate_token
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
-db=Database()
 
 
 class user_model():
     def __init__(self):
-        self.conn=db.get_connection()
+        self.conn=get_connection()
 
     def register(self):
         data=request.json

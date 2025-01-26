@@ -4,9 +4,8 @@ from models.response_model import run_workflow
 
 from configs.helpers import decode_token
 
-from configs.config import Database
+from configs.config import get_connection
 
-db=Database()
 
 @app.route("/api/query",methods=["POST"])
 def get_query():
@@ -15,7 +14,7 @@ def get_query():
     token=data.get("token","")
 
     user_id=decode_token(token)
-    print(user_id)
+    print("user_id",user_id)
 
     if not user_query:
         return jsonify({"error": "user_query is required"}), 400
@@ -41,7 +40,7 @@ def get_query():
 def get_chat_history():
     try:
         # Establish database connection
-        conn = db.get_connection()
+        conn = get_connection()
         cursor = conn.cursor()
 
         # Query to fetch all chat history records
@@ -55,7 +54,7 @@ def get_chat_history():
         history_data = []
         for record in chat_history:
             history_data.append({
-                "user_id": record[0],  
+                "user_id": record[1],  
                 "query": record[2],
                 "response": record[3],
                 "createdAt": record[4]
