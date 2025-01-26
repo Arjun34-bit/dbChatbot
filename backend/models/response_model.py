@@ -57,12 +57,16 @@ def generate_sql(state:AgentState):
         if not api_key:
             raise ValueError("OpenAI API key is not set in environment variables.")
 
-        # Set up LangChain with OpenAI for SQL query generation
-        response = openai.Completion.create(
-            model="gpt-4",  # Use the desired model
-            prompt=f"User Query: {state['user_query']}\nDATABASE SCHEMA: {state['database_schema']}\nYou are a helpful assistant that converts natural language queries into SQL database scehema is also provided. And return only sql statement skip the explanations",
+        messages = [
+            {"role": "system", "content": "You are a helpful assistant that converts natural language queries into SQL. The database schema is also provided. Return only the SQL statement, skip the explanations."},
+            {"role": "user", "content": f"User Query: {state['user_query']}\nDATABASE SCHEMA: {state['database_schema']}"}
+        ]
+
+        response = openai.chat.Completion.create(
+            model="gpt-4o-mini", 
+            messages=messages, 
             max_tokens=150,
-            temperature=0.7,
+            temperature=0.7  
         )
         
         # Extract the reply from the response
@@ -120,12 +124,14 @@ def human_readable(state:AgentState):
             f"You are a helpful assistant that converts sql table data into natural human-readable format according to the question. And return only text, skip the explanations"
         )
 
-        # Send the prompt to the OpenAI API to get a response
-        response = openai.Completion.create(
-            model="gpt-4o-mini",  # Specify the desired model
-            prompt=prompt,  # Pass the formatted prompt as input
-            max_tokens=150,  # Set a limit on response length
-            temperature=0.7,  # Adjust creativity of the output
+        response = openai.chat.Completion.create(
+            model="gpt-4o-mini",  
+            messages=[{
+                "role": "user",
+                "content": prompt
+            }],
+            max_tokens=150,  
+            temperature=0.7, 
         )
         
         # Extract the reply from the response
