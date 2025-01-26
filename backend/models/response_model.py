@@ -58,7 +58,7 @@ def generate_sql(state:AgentState):
             raise ValueError("OpenAI API key is not set in environment variables.")
 
         # Set up LangChain with OpenAI for SQL query generation
-        response = openai.ChatCompletion.create(
+        response = openai.openai.Completion.create(
             model="gpt-4o-mini",  # Use the desired model
             messages=[
                 {"role": "system", "content": "You are a helpful assistant that converts natural language queries into SQL database scehema is also provided. And return only sql statement skip the explanations"},
