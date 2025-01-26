@@ -58,12 +58,11 @@ def generate_sql(state:AgentState):
             raise ValueError("OpenAI API key is not set in environment variables.")
 
         # Set up LangChain with OpenAI for SQL query generation
-        response = openai.openai.Completion.create(
-            model="gpt-4o-mini",  # Use the desired model
-            messages=[
-                {"role": "system", "content": "You are a helpful assistant that converts natural language queries into SQL database scehema is also provided. And return only sql statement skip the explanations"},
-                {"role": "user", "content": f"User Query: {state['user_query']}\n DATABASE SCHEMA: {state['database_schema']}"},
-            ]
+        response = openai.Completion.create(
+            model="gpt-4",  # Use the desired model
+            prompt=f"User Query: {state['user_query']}\nDATABASE SCHEMA: {state['database_schema']}\nYou are a helpful assistant that converts natural language queries into SQL database scehema is also provided. And return only sql statement skip the explanations",
+            max_tokens=150,
+            temperature=0.7,
         )
         
         # Extract the reply from the response
@@ -115,12 +114,18 @@ def human_readable(state:AgentState):
             raise ValueError("OpenAI API key is not set in environment variables.")
 
         # Set up LangChain with OpenAI for SQL query generation
-        response = openai.ChatCompletion.create(
-            model="gpt-4o-mini",  # Use the desired model
-            messages=[
-                {"role": "system", "content": "You are a helpful assistant that converts sql table data into natural human-readable format according to the question. And return only text, skip the explanations"},
-                {"role": "user", "content": f"User Query: {state['user_query']}\nSQL Query Result: {state['execute_sql_query']}"},
-            ]
+        prompt = (
+            f"User Query: {state['user_query']}\n"
+            f"SQL Query Result: {state['execute_sql_query']}\n"
+            f"You are a helpful assistant that converts sql table data into natural human-readable format according to the question. And return only text, skip the explanations"
+        )
+
+        # Send the prompt to the OpenAI API to get a response
+        response = openai.Completion.create(
+            model="gpt-4o-mini",  # Specify the desired model
+            prompt=prompt,  # Pass the formatted prompt as input
+            max_tokens=150,  # Set a limit on response length
+            temperature=0.7,  # Adjust creativity of the output
         )
         
         # Extract the reply from the response
