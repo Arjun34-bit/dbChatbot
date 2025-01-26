@@ -5,7 +5,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 def get_connection():
-    # Fetch a connection from the pool
     try:
         # Create a single connection
         connection = mysql.connector.connect(
@@ -17,6 +16,7 @@ def get_connection():
         )
         if connection.is_connected():
             print("Connected to the database successfully")
+        return connection
     except mysql.connector.Error as e:
         print(f"Error connecting to the database: {e}")
         connection = None

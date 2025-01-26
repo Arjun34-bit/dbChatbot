@@ -6,22 +6,49 @@ from langchain_community.llms import OpenAI
 from langchain.prompts import PromptTemplate
 from langgraph.graph import StateGraph, START, END
 from configs.config import get_connection
-import mysql.connector
-# from typing import Annotated 
-# from langgraph.graph.message import add_message
 
-
-
-class State(TypedDict):
-    current_user: str
 
 
 class AgentState(TypedDict):
+    database_schema:str
     user_query:str
     sql_query:str
     execute_sql_query:str
     formatted_response:str
 # Define Node Functions
+
+def get_schema(state: AgentState):
+    try:
+        print("Fetching database schema...")
+
+        conn = get_connection()
+        cursor = conn.cursor()
+
+        # Query to get all tables in the database
+        cursor.execute("SHOW TABLES")
+        tables = cursor.fetchall()
+
+        print(tables)
+        schema = {}
+
+        for table in tables:
+            table_name = table[0]
+            # Query to get column information for each table
+            cursor.execute(f"DESCRIBE {table_name}")
+            columns = cursor.fetchall()
+            schema[table_name] = [
+                {"Field": col[0], "Type": col[1], "Null": col[2], "Key": col[3], "Default": col[4], "Extra": col[5]}
+                for col in columns
+            ]
+
+        # Store the schema in the state
+        print(f"schema : {schema}")
+        state["database_schema"] = schema
+        print("Database schema fetched successfully.")
+        return state
+    except Exception as e:
+        print(f"Error fetching database schema: {str(e)}")
+        raise
 
 def generate_sql(state:AgentState):
     try:
@@ -36,8 +63,8 @@ def generate_sql(state:AgentState):
         response = openai.ChatCompletion.create(
             model="gpt-4o-mini",  # Use the desired model
             messages=[
-                {"role": "system", "content": "You are a helpful assistant that converts natural language queries into SQL. And return only sql statement skip the explanations"},
-                {"role": "user", "content": state["user_query"]},
+                {"role": "system", "content": "You are a helpful assistant that converts natural language queries into SQL database scehema is also provided. And return only sql statement skip the explanations"},
+                {"role": "user", "content": f"User Query: {state['user_query']}\n DATABASE SCHEMA: {state['database_schema']}"},
             ]
         )
         
@@ -110,10 +137,12 @@ def human_readable(state:AgentState):
 
 def run_workflow(user_query):
     workflow = StateGraph(AgentState)
+    workflow.add_node("get_schema", get_schema)
     workflow.add_node("generate_sql", generate_sql)
     workflow.add_node("execute_sql", execute_sql)
     workflow.add_node("human_readable", human_readable)
-    workflow.add_edge(START, "generate_sql")
+    workflow.add_edge(START, "get_schema")
+    workflow.add_edge("get_schema", "generate_sql")
     workflow.add_edge("generate_sql", "execute_sql")
     workflow.add_edge("execute_sql", "human_readable")
     workflow.add_edge("human_readable", END)

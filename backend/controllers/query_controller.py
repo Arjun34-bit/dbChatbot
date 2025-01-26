@@ -21,7 +21,7 @@ def get_query():
     try:
         response = run_workflow(user_query)
 
-        conn = db.get_connection()  # Adjust if using a different method for database connection
+        conn = get_connection()  # Adjust if using a different method for database connection
         cursor = conn.cursor()
         
         # Save the chat history into the database
