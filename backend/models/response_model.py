@@ -74,7 +74,6 @@ def generate_sql(state:AgentState):
             {"role": "user", "content": f"User Query: {state['user_query']}\nDATABASE SCHEMA: {state['database_schema']}"}
             ],
             model="gpt-4o-mini", 
-            stream=True  
         )
         
         # Extract the reply from the response
@@ -137,7 +136,7 @@ def human_readable(state:AgentState):
         )
 
 
-        response = client.completions.create(  
+        response = client.chat.completions.create(  
             messages=[{
                 "role": "user",
                 "content": message
@@ -145,7 +144,6 @@ def human_readable(state:AgentState):
             model="gpt-4o-mini",
             max_tokens=150,  
             temperature=0.7,
-            stream=True 
         )
         
         # Extract the reply from the response
