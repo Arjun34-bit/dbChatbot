@@ -1,6 +1,6 @@
 import os
-import openai
-# from openai import OpenAI
+# import openai
+from openai import OpenAI
 from typing_extensions import TypedDict
 from langchain.chains import LLMChain
 # from langchain_community.llms import OpenAI
@@ -59,20 +59,18 @@ def generate_sql(state:AgentState):
         if not api_key:
             raise ValueError("OpenAI API key is not set in environment variables.")
         
-        openai.api_key = api_key
+        # openai.api_key = api_key
         
-        # client=OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+        client=OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
         messages = [
             {"role": "system", "content": "You are a helpful assistant that converts natural language queries into SQL. The database schema is also provided. Return only the SQL statement, skip the explanations."},
             {"role": "user", "content": f"User Query: {state['user_query']}\nDATABASE SCHEMA: {state['database_schema']}"}
         ]
 
-        response =  openai.completions.create(
+        response =  client.chat.completions.create(
             model="gpt-4o-mini", 
-            promt=messages, 
-            max_tokens=150,
-            temperature=0.7  
+            promt=messages,  
         )
         
         # Extract the reply from the response
