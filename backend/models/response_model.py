@@ -70,7 +70,7 @@ def generate_sql(state:AgentState):
 
         response =  openai.completions.create(
             model="gpt-4o-mini", 
-            messages=messages, 
+            promt=messages, 
             max_tokens=150,
             temperature=0.7  
         )
