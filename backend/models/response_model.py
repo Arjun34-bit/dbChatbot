@@ -70,7 +70,7 @@ def generate_sql(state:AgentState):
 
         response =  openai.Completion.create(
             engine='text-davinci-003', 
-            prompt="Write a simple SELECT SQL Query"
+            prompt=messages
         )
         
         # Extract the reply from the response
@@ -133,15 +133,20 @@ def human_readable(state:AgentState):
         )
 
 
-        response = client.completions.create(  
-            messages=[{
-                "role": "user",
-                "content": message
-            }],
-            model="gpt-4o-mini",
-            max_tokens=150,  
-            temperature=0.7,
+        response=openai.Completion.create(
+            engine='text-davinci-003', 
+            prompt=message
         )
+
+        # response = client.completions.create(  
+        #     messages=[{
+        #         "role": "user",
+        #         "content": message
+        #     }],
+        #     model="gpt-4o-mini",
+        #     max_tokens=150,  
+        #     temperature=0.7,
+        # )
         
         # Extract the reply from the response
         bot_reply = response["choices"][0]["message"]["content"]
