@@ -61,20 +61,27 @@ def generate_sql(state:AgentState):
         
         openai.api_key = api_key
         
-        # client=OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+        client=OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-        messages = [
+        message = [
             {"role": "system", "content": "You are a helpful assistant that converts natural language queries into SQL. The database schema is also provided. Return only the SQL statement, skip the explanations."},
             {"role": "user", "content": f"User Query: {state['user_query']}\nDATABASE SCHEMA: {state['database_schema']}"}
         ]
 
-        response =  openai.Completion.create(
-            engine='text-davinci-003', 
-            prompt=messages
+        response =  client.chat.completions.create(
+            model='gpt-4o-mini', 
+            messages=message
         )
+
+        # response=openai.ChatCompletion.create(
+        #     model='gpt-3.5-turbo',
+        #     messages=[
+        #         {"role": "user", "content": message}
+        #     ]
+        # )
         
         # Extract the reply from the response
-        bot_reply = response["choices"][0]["message"]["content"]
+        bot_reply = response.choices[0].message.content
         start_marker = "```sql\n"
         end_marker = "\n```"
 
@@ -133,23 +140,13 @@ def human_readable(state:AgentState):
         )
 
 
-        response=openai.Completion.create(
-            engine='text-davinci-003', 
-            prompt=message
+        response =  client.chat.completions.create(
+            model='gpt-4o-mini', 
+            messages=message
         )
-
-        # response = client.completions.create(  
-        #     messages=[{
-        #         "role": "user",
-        #         "content": message
-        #     }],
-        #     model="gpt-4o-mini",
-        #     max_tokens=150,  
-        #     temperature=0.7,
-        # )
         
         # Extract the reply from the response
-        bot_reply = response["choices"][0]["message"]["content"]
+        bot_reply = response.choices[0].message.content
         state["formatted_response"]=bot_reply
         print(f"Human Readable Response {state['formatted_response']}")
         return state
