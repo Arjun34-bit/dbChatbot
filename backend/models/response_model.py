@@ -1,5 +1,6 @@
 import os
 import openai
+from openai import OpenAI
 from typing_extensions import TypedDict
 from langchain.chains import LLMChain
 from langchain_community.llms import OpenAI
@@ -22,7 +23,7 @@ def get_schema(state: AgentState):
         print("Fetching database schema...")
 
         conn = get_connection()
-        cursor = conn.cursor()
+        cursor = conn.cursor()  
 
         # Query to get all tables in the database
         cursor.execute("SHOW TABLES")
@@ -56,13 +57,15 @@ def generate_sql(state:AgentState):
         api_key = os.getenv("OPENAI_API_KEY")
         if not api_key:
             raise ValueError("OpenAI API key is not set in environment variables.")
+        
+        client=OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
         messages = [
             {"role": "system", "content": "You are a helpful assistant that converts natural language queries into SQL. The database schema is also provided. Return only the SQL statement, skip the explanations."},
             {"role": "user", "content": f"User Query: {state['user_query']}\nDATABASE SCHEMA: {state['database_schema']}"}
         ]
 
-        response = openai.chat.Completion.create(
+        response = client.chat.Completion.create(
             model="gpt-4o-mini", 
             messages=messages, 
             max_tokens=150,
@@ -116,6 +119,9 @@ def human_readable(state:AgentState):
         api_key = os.getenv("OPENAI_API_KEY")
         if not api_key:
             raise ValueError("OpenAI API key is not set in environment variables.")
+        
+        client=OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
 
         # Set up LangChain with OpenAI for SQL query generation
         prompt = (
@@ -124,7 +130,7 @@ def human_readable(state:AgentState):
             f"You are a helpful assistant that converts sql table data into natural human-readable format according to the question. And return only text, skip the explanations"
         )
 
-        response = openai.chat.Completion.create(
+        response = client.chat.Completion.create(
             model="gpt-4o-mini",  
             messages=[{
                 "role": "user",
