@@ -68,7 +68,7 @@ def generate_sql(state:AgentState):
             {"role": "user", "content": f"User Query: {state['user_query']}\nDATABASE SCHEMA: {state['database_schema']}"}
         ]
 
-        response =  openai.ChatCompletion.create(
+        response =  openai.completions.create(
             model="gpt-4o-mini", 
             messages=messages, 
             max_tokens=150,
@@ -134,7 +134,7 @@ def human_readable(state:AgentState):
             f"You are a helpful assistant that converts sql table data into natural human-readable format according to the question. And return only text, skip the explanations"
         )
 
-        response = openai.ChatCompletion.create(
+        response = openai.completions.create(
             model="gpt-4o-mini",  
             messages=[{
                 "role": "user",
