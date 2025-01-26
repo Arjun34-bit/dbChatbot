@@ -68,7 +68,7 @@ def generate_sql(state:AgentState):
             {"role": "user", "content": f"User Query: {state['user_query']}\nDATABASE SCHEMA: {state['database_schema']}"}
         ]
 
-        response =  client.chat.completions.create(
+        response =  client.completions.create(
             messages=[
                 {"role": "system", "content": "You are a helpful assistant that converts natural language queries into SQL. The database schema is also provided. Return only the SQL statement, skip the explanations."},
             {"role": "user", "content": f"User Query: {state['user_query']}\nDATABASE SCHEMA: {state['database_schema']}"}
@@ -136,7 +136,7 @@ def human_readable(state:AgentState):
         )
 
 
-        response = client.chat.completions.create(  
+        response = client.completions.create(  
             messages=[{
                 "role": "user",
                 "content": message
