@@ -68,8 +68,8 @@ def generate_sql(state:AgentState):
             {"role": "user", "content": f"User Query: {state['user_query']}\nDATABASE SCHEMA: {state['database_schema']}"}
         ]
 
-        response =  openai.Completions.create(
-            engine='text-davinci-0032', 
+        response =  openai.Completion.create(
+            engine='text-davinci-003', 
             prompt="Write a simple SELECT SQL Query"
         )
         
