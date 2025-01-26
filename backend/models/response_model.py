@@ -68,9 +68,9 @@ def generate_sql(state:AgentState):
             {"role": "user", "content": f"User Query: {state['user_query']}\nDATABASE SCHEMA: {state['database_schema']}"}
         ]
 
-        response =  openai.completions.create(
-            model="gpt-4o-mini", 
-            messages="Write a simple SELECT SQL Query"
+        response =  openai.Completions.create(
+            engine='text-davinci-0032', 
+            prompt="Write a simple SELECT SQL Query"
         )
         
         # Extract the reply from the response
