@@ -68,9 +68,12 @@ def generate_sql(state:AgentState):
             {"role": "user", "content": f"User Query: {state['user_query']}\nDATABASE SCHEMA: {state['database_schema']}"}
         ]
 
-        response =  client.chat.completions.create(
+        response =  client.completions.create(
             model="gpt-4o-mini", 
-            promt=messages,  
+            promt=[
+                {"role": "system", "content": "You are a helpful assistant that converts natural language queries into SQL. The database schema is also provided. Return only the SQL statement, skip the explanations."},
+            {"role": "user", "content": f"User Query: {state['user_query']}\nDATABASE SCHEMA: {state['database_schema']}"}
+            ],  
         )
         
         # Extract the reply from the response
@@ -121,9 +124,9 @@ def human_readable(state:AgentState):
         if not api_key:
             raise ValueError("OpenAI API key is not set in environment variables.")
         
-        # client=OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+        client=OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-        openai.api_key = api_key
+        # openai.api_key = api_key
 
         # Set up LangChain with OpenAI for SQL query generation
         messages = (
@@ -133,7 +136,7 @@ def human_readable(state:AgentState):
         )
 
 
-        response = openai.completions.create(
+        response = client.completions.create(
             model="gpt-4o-mini",  
             prompt=[{
                 "role": "user",
