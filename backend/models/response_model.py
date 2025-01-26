@@ -1,9 +1,10 @@
 import os
 import openai
-from openai import OpenAI
+# from openai import OpenAI
 from typing_extensions import TypedDict
 from langchain.chains import LLMChain
-from langchain_community.llms import OpenAI
+# from langchain_community.llms import OpenAI
+from langchain_openai import OpenAI
 from langchain.prompts import PromptTemplate
 from langgraph.graph import StateGraph, START, END
 from configs.config import get_connection
