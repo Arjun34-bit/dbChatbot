@@ -68,12 +68,12 @@ def generate_sql(state:AgentState):
             {"role": "user", "content": f"User Query: {state['user_query']}\nDATABASE SCHEMA: {state['database_schema']}"}
         ]
 
-        response =  client.completions.create(
-            model="gpt-4o-mini", 
-            promt=[
+        response =  client.chat.completions.create(
+            messages=[
                 {"role": "system", "content": "You are a helpful assistant that converts natural language queries into SQL. The database schema is also provided. Return only the SQL statement, skip the explanations."},
             {"role": "user", "content": f"User Query: {state['user_query']}\nDATABASE SCHEMA: {state['database_schema']}"}
             ],
+            model="gpt-4o-mini", 
             stream=True  
         )
         
@@ -130,19 +130,19 @@ def human_readable(state:AgentState):
         # openai.api_key = api_key
 
         # Set up LangChain with OpenAI for SQL query generation
-        messages = (
+        message = (
             f"User Query: {state['user_query']}\n"
             f"SQL Query Result: {state['execute_sql_query']}\n"
             f"You are a helpful assistant that converts sql table data into natural human-readable format according to the question. And return only text, skip the explanations"
         )
 
 
-        response = client.completions.create(
-            model="gpt-4o-mini",  
-            prompt=[{
+        response = client.completions.create(  
+            messages=[{
                 "role": "user",
-                "content": messages
+                "content": message
             }],
+            model="gpt-4o-mini",
             max_tokens=150,  
             temperature=0.7,
             stream=True 
