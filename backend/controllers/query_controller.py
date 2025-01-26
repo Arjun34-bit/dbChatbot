@@ -34,6 +34,8 @@ def get_query():
         return jsonify({"response": response})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    finally:
+        conn.close()
     
 
 @app.route("/api/chat-history", methods=["GET"])
@@ -64,3 +66,5 @@ def get_chat_history():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    finally:
+        conn.close()

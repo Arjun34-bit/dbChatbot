@@ -11,6 +11,10 @@ class user_model():
     def __init__(self):
         self.conn=get_connection()
 
+    def close_connection(self):
+        if self.conn:
+            self.conn.close()
+
     def register(self):
         data=request.json
         username=data.get("username")
@@ -35,6 +39,8 @@ class user_model():
             return jsonify({'message': 'User registered successfully.'}), 201
         except Exception as e:
             return jsonify({'message': 'Error occurred: ' + str(e)}), 500
+        finally:
+            self.close_connection() 
         
         
         
@@ -62,6 +68,8 @@ class user_model():
             return jsonify({"token": token}), 200
         except Exception as e:
             return jsonify({'message': 'Error occurred: ' + str(e)}), 500
+        finally:
+            self.close_connection() 
         
 
 
