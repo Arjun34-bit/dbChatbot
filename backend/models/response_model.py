@@ -49,6 +49,8 @@ def get_schema(state: AgentState):
     except Exception as e:
         print(f"Error fetching database schema: {str(e)}")
         raise
+    finally:
+        conn.close()
 
 def generate_sql(state:AgentState):
     try:
@@ -117,6 +119,8 @@ def execute_sql(state:AgentState):
     except Exception as e: 
         print(f"Error: {str(e)}")
         raise
+    finally:
+        conn.close()
 
 def human_readable(state:AgentState):
     print("Gnerating Human Readable format")
