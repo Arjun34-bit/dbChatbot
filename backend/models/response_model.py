@@ -73,7 +73,8 @@ def generate_sql(state:AgentState):
             promt=[
                 {"role": "system", "content": "You are a helpful assistant that converts natural language queries into SQL. The database schema is also provided. Return only the SQL statement, skip the explanations."},
             {"role": "user", "content": f"User Query: {state['user_query']}\nDATABASE SCHEMA: {state['database_schema']}"}
-            ],  
+            ],
+            stream=True  
         )
         
         # Extract the reply from the response
@@ -143,7 +144,8 @@ def human_readable(state:AgentState):
                 "content": messages
             }],
             max_tokens=150,  
-            temperature=0.7, 
+            temperature=0.7,
+            stream=True 
         )
         
         # Extract the reply from the response
