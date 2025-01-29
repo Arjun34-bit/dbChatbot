@@ -3,7 +3,7 @@ from configs.config import get_connection
 from configs.helpers import generate_token
 from werkzeug.security import generate_password_hash, check_password_hash
 
-class UserModel:
+class user_model:
     def register(self):
         data = request.json
         username = data.get("username")
