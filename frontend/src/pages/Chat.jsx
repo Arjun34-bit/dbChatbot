@@ -58,6 +58,7 @@ function Chat() {
   return (
     <div className="min-h-screen bg-blue-500 text-white p-6 flex flex-col items-center">
       <h2 className="text-xl font-bold">Welcome</h2>
+      <h3>Start Your Sql Query eg: what products are available?</h3>
 
       <div className="chat-box bg-white text-black rounded-md p-4 w-full max-w-lg mt-5">
         {chat.map((c, index) => (

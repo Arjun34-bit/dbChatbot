@@ -40,6 +40,7 @@ class user_model():
         except Exception as e:
             return jsonify({'message': 'Error occurred: ' + str(e)}), 500
         finally:
+            cursor.close()
             self.close_connection() 
         
         
@@ -69,6 +70,7 @@ class user_model():
         except Exception as e:
             return jsonify({'message': 'Error occurred: ' + str(e)}), 500
         finally:
+            cursor.close()
             self.close_connection() 
         
 

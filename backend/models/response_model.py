@@ -50,6 +50,7 @@ def get_schema(state: AgentState):
         print(f"Error fetching database schema: {str(e)}")
         raise
     finally:
+        cursor.close()
         conn.close()
 
 def generate_sql(state:AgentState):
@@ -120,6 +121,7 @@ def execute_sql(state:AgentState):
         print(f"Error: {str(e)}")
         raise
     finally:
+        cursor.close()
         conn.close()
 
 def human_readable(state:AgentState):
