@@ -34,8 +34,7 @@ class user_model:
             return jsonify({'message': 'Error occurred: ' + str(e)}), 500
         finally:
             if connection:
-                connection.close()  # ✅ Ensuring the connection is closed
-
+                connection.close()  
     def login(self):
         data = request.json
         email = data.get("email")
@@ -66,4 +65,4 @@ class user_model:
             return jsonify({'message': 'Error occurred: ' + str(e)}), 500
         finally:
             if connection:
-                connection.close()  # ✅ Closing the connection properly
+                connection.close()  
